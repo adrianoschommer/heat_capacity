@@ -184,7 +184,7 @@ Heat capacity and internal resistance calculations.
 \end_layout
 
 \begin_layout Section
-Thermal model
+Thermal Model
 \end_layout
 
 \begin_layout Standard
@@ -417,14 +417,19 @@ C_{p}(R_{in}+R_{out})\frac{dT_{s}}{dt}=R_{out}\dot{Q}_{gen}+T_{a}-T_{s}\label{eq
 \end_layout
 
 \begin_layout Standard
-Finally, rearanging and applying a time step 
-\begin_inset Formula $\Delta t(s)$
+Finally, rearanging and applying a
+\begin_inset CommandInset href
+LatexCommand href
+name " forward Euler discretization"
+target "https://en.wikipedia.org/wiki/Euler_method"
+literal "false"
+
 \end_inset
 
- we have:
+ to solve the differential equation we have:
 \begin_inset Formula 
 \begin{equation}
-T_{s}(t)=\frac{R_{out}\dot{Q}_{gen}(t)+T_{a}-T_{s}(t)}{C_{p}(R_{in}+R_{out})}\Delta t+T_{s}(t-1)\label{eq:heat_balance_deltaT}
+T_{s}(n+1)=\frac{R_{out}\dot{Q}_{gen}(t)+T_{a}-T_{s}(n)}{C_{p}(R_{in}+R_{out})}\Delta t+T_{s}(n)\label{eq:heat_balance_deltaT}
 \end{equation}
 
 \end_inset
@@ -432,8 +437,36 @@ T_{s}(t)=\frac{R_{out}\dot{Q}_{gen}(t)+T_{a}-T_{s}(t)}{C_{p}(R_{in}+R_{out})}\De
 
 \end_layout
 
+\begin_layout Standard
+Where 
+\begin_inset Formula $n$
+\end_inset
+
+ represents the current step in time, 
+\begin_inset Formula $n+1$
+\end_inset
+
+ the next (uptadated) step and 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ is the difference in time (time step) between 
+\begin_inset Formula $n$
+\end_inset
+
+ and 
+\begin_inset Formula $n+1$
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
-Measurements 
+Methodology
+\end_layout
+
+\begin_layout Subsection
+Experimental setup
 \end_layout
 
 \begin_layout Subsection
@@ -589,12 +622,99 @@ R_{out}=\frac{(T_{s}-T_{a})}{\dot{Q}_{gen}}
 
 \end_layout
 
-\begin_layout Section
-Internal thermal resistance & Heat capacity calculation
+\begin_layout Subsection
+Internal Thermal Resistance & Heat Capacity
 \end_layout
 
 \begin_layout Standard
+In order to calculate Internal thermal resistance 
+\begin_inset Formula $R_{in}$
+\end_inset
 
+ and Heat Capacity 
+\begin_inset Formula $C_{p}$
+\end_inset
+
+, we need to perform least squares regression at the init_section of the
+ cycle.
+ The idea is that we take Equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:heat_balance_deltaT"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and optimze 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $R_{in}$
+\end_inset
+
+and 
+\begin_inset Formula $Cp$
+\end_inset
+
+ in order to have Equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:least_squares_optimzed_params"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ s:
+\begin_inset Formula 
+\begin{align}
+C_{p}(R_{in}+R_{out}) & =X_{withoutfans}\label{eq:least_squares_optimzed_params}\\
+C_{p}(R_{in}+R_{out}) & =X_{withfans}
+\end{align}
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ This is done for both the experimental setups with and without fans.
+ Doing this, we now have two simultaneous equations and we can calculte
+ the two unknowns 
+\begin_inset Formula $R_{in}$
+\end_inset
+
+ and 
+\begin_inset Formula $C_{p}$
+\end_inset
+
+, since 
+\begin_inset Formula $R_{out}$
+\end_inset
+
+ was already calculated before.
 \end_layout
 
 \begin_layout Section
