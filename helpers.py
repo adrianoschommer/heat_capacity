@@ -29,23 +29,27 @@ def read_file(index):
 
 def select_test_data(data, plot):
 
-    # data = data[(data['Test_Time(s)'] > 27840)]
-    data = data[(data['Test_Time(s)'] > 24150)]
+    # data = data[(data['Test_Time(s)'] > 27840)] #file 1
+    
+    data = data[(data['Test_Time(s)'] > 24150)] #file 0
     if plot:
-        fig, ax1 = plt.subplots(figsize=(7,4))
-        ax1.plot(data['Test_Time(s)'], data['Voltage(V)'], 
-                 label='Voltage [V]')
-        ax2=ax1.twinx()
-        ax2.plot(data['Test_Time(s)'], data['Current(A)'], 
-                 label='Current [A]', color='r')
-        ax2.set_ylim([35,-50])
-        lines, labels = ax1.get_legend_handles_labels()
-        lines2, labels2 = ax2.get_legend_handles_labels()
-        ax2.legend(lines + lines2, labels + labels2, loc=0)
-        ax1.set_ylabel('Voltage [V]')
-        ax2.set_ylabel('Current [A]')
-        ax1.set_xlabel('Running test time [s]')
-        ax1.grid()
+        pass
+# =============================================================================
+#         fig, ax1 = plt.subplots(figsize=(7,4))
+#         ax1.plot(data['Test_Time(s)'], data['Voltage(V)'], 
+#                  label='Voltage [V]')
+#         ax2=ax1.twinx()
+#         ax2.plot(data['Test_Time(s)'], data['Current(A)'], 
+#                  label='Current [A]', color='r')
+#         ax2.set_ylim([35,-50])
+#         lines, labels = ax1.get_legend_handles_labels()
+#         lines2, labels2 = ax2.get_legend_handles_labels()
+#         ax2.legend(lines + lines2, labels + labels2, loc=0)
+#         ax1.set_ylabel('Voltage [V]')
+#         ax2.set_ylabel('Current [A]')
+#         ax1.set_xlabel('Running test time [s]')
+#         ax1.grid()
+# =============================================================================
     else:
         return       
     return data
@@ -70,15 +74,18 @@ def Q_gen(data, plot):
     df['Q_gen_mean'] = df['Q_gen'].mean()
     print('average_Qgen =', round(df['Q_gen'].mean(),3))
     if plot:
-        fig, ax1 = plt.subplots(figsize=(7,4))
-        ax1.plot(data['Test_Time(s)'], df['Q_gen'], 
-                 label='Calculated $\dot{Q}_{gen}$')
-        ax1.set_ylabel('$\dot{Q}_{gen} [W]$')
-        ax1.set_xlabel('$Running test time [s]$')
-        ax1.plot(data['Test_Time(s)'], df['Q_gen_mean'], 
-                 label='Average $\dot{Q}_{gen}=$'+ str(round(df['Q_gen'].mean(),2)) + 'W')
-        plt.legend(loc = 'upper right')
-        ax1.grid()
+        pass
+# =============================================================================
+#         fig, ax1 = plt.subplots(figsize=(7,4))
+#         ax1.plot(data['Test_Time(s)'], df['Q_gen'], 
+#                  label='Calculated $\dot{Q}_{gen}$')
+#         ax1.set_ylabel('$\dot{Q}_{gen} [W]$')
+#         ax1.set_xlabel('$Running test time [s]$')
+#         ax1.plot(data['Test_Time(s)'], df['Q_gen_mean'], 
+#                  label='Average $\dot{Q}_{gen}=$'+ str(round(df['Q_gen'].mean(),2)) + 'W')
+#         plt.legend(loc = 'upper right')
+#         ax1.grid()
+# =============================================================================
     else:
         return       
     return df['Q_gen']
@@ -107,25 +114,28 @@ def section_final(data, plot):
     print('R_out = ' + str(round(R_out,2)))
     
     if plot:
-        fig, ax1 = plt.subplots(figsize=(7,7))
-    
-        scatter_size = 0.5
-        ax1.scatter(Test_Time, Ts_1, label='Surface (Thermocouple 1)', s=scatter_size)
-        ax1.scatter(Test_Time, Ts_2, label='Surface (Thermocouple 2)', s=scatter_size)
-        ax1.scatter(Test_Time, Ta, label='Ambient Temperature', s=scatter_size)
-        
-        ax1.plot(Test_Time, Ts_mean, label='Average Surface Temp =' + str(round(Ts_mean.mean(),2)))
-        ax1.plot(Test_Time, Ta_mean, label='Average Ambient Temp =' + str(round(Ta_mean.mean(),2)))
-        ax1.plot(Test_Time, Ts_filtered, label='Filtered Surface Temp (Savitzky–Golay)')
-        ax1.plot(Test_Time, Ta_filtered, label='Filtered Ambient Temp (Savitzky–Golay)')
-        
-        print('Average Surface Temp = ' + str(round(Ts_mean.mean(),2)))
-        print('Average Ambient Temp = ' + str(round(Ta_mean.mean(),2)))
-  
-        ax1.legend(loc=0)
-        ax1.set_ylabel('Temperature [°C]')
-        ax1.set_xlabel('Time [s]')
-        ax1.grid()
+        pass
+# =============================================================================
+#         fig, ax1 = plt.subplots(figsize=(7,7))
+#     
+#         scatter_size = 0.5
+#         ax1.scatter(Test_Time, Ts_1, label='Surface (Thermocouple 1)', s=scatter_size)
+#         ax1.scatter(Test_Time, Ts_2, label='Surface (Thermocouple 2)', s=scatter_size)
+#         ax1.scatter(Test_Time, Ta, label='Ambient Temperature', s=scatter_size)
+#         
+#         ax1.plot(Test_Time, Ts_mean, label='Average Surface Temp =' + str(round(Ts_mean.mean(),2)))
+#         ax1.plot(Test_Time, Ta_mean, label='Average Ambient Temp =' + str(round(Ta_mean.mean(),2)))
+#         ax1.plot(Test_Time, Ts_filtered, label='Filtered Surface Temp (Savitzky–Golay)')
+#         ax1.plot(Test_Time, Ta_filtered, label='Filtered Ambient Temp (Savitzky–Golay)')
+#         
+#         print('Average Surface Temp = ' + str(round(Ts_mean.mean(),2)))
+#         print('Average Ambient Temp = ' + str(round(Ta_mean.mean(),2)))
+#   
+#         ax1.legend(loc=0)
+#         ax1.set_ylabel('Temperature [°C]')
+#         ax1.set_xlabel('Time [s]')
+#         ax1.grid()
+# =============================================================================
     else:
         return       
     return data_section_final, Ts_mean, R_out
@@ -141,19 +151,22 @@ def section_initial(data, cutoff_factor, Ts_mean, plot):
     print('cutoff temperature = ' + str(round(cutoff,3)))
     
     if plot:
-        fig, ax1 = plt.subplots(figsize=(7,4))
-        ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Aux_Temperature_3(C)'], 
-                 label='Ambient', color='r')
-        ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Aux_Temperature_1(C)'],
-                 label='Surface (Thermocouple 1)')
-        ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Aux_Temperature_2(C)'],
-                 label='Surface (Thermocouple 2)')
-        ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Ts_filtered'],
-                 label='Filtered Surface Temp (Savitzky–Golay)')       
-        ax1.legend(loc=0)
-        ax1.set_ylabel('Temperature [°C]')
-        ax1.set_xlabel('Test_Time(s)')
-        ax1.grid()
+        pass
+# =============================================================================
+#         fig, ax1 = plt.subplots(figsize=(7,4))
+#         ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Aux_Temperature_3(C)'], 
+#                  label='Ambient', color='r')
+#         ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Aux_Temperature_1(C)'],
+#                  label='Surface (Thermocouple 1)')
+#         ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Aux_Temperature_2(C)'],
+#                  label='Surface (Thermocouple 2)')
+#         ax1.plot(data_section_initial['Test_Time(s)'], data_section_initial['Ts_filtered'],
+#                  label='Filtered Surface Temp (Savitzky–Golay)')       
+#         ax1.legend(loc=0)
+#         ax1.set_ylabel('Temperature [°C]')
+#         ax1.set_xlabel('Test_Time(s)')
+#         ax1.grid()
+# =============================================================================
     else:
         return
     return data_section_initial
@@ -162,6 +175,7 @@ def optimize(data, R_out):
     Q_gen = data['Q_gen'].mean()
     Ta = data['Aux_Temperature_3(C)'].mean()
     time_data = data['Test_Time(s)']
+    A = []
 
     def y(t, Ts_initial, theta):
         Ts = []
@@ -184,22 +198,25 @@ def optimize(data, R_out):
     theta0 = [106]
     Ts_initial = data['Ts_filtered'].iloc[0]
     res1 = least_squares(fun, theta0)
+    A.append(res1.x[0])
     
-    fig, ax1 = plt.subplots(figsize=(7,4))
-    ax1.plot(ts, res1.fun+ys, label = 'fitted least squares')
-    ax1.plot(ts, ys, label = 'surface temp (filtered) \n' +
-             str('Cp(Rin + Rout) = ' + str(round(res1.x[0], 2))))
-    ax1.set_ylabel('Temperature [°C]')
-    ax1.set_xlabel('Time (s)')
-    ax1.legend()
-    ax1.grid()
-    
-    print('Cp(Rin + Rout) = ' + str(round(res1.x[0], 2)))
-    #print('Rin = ' + str(round(res1.x[1], 2)))
-    #print('Cp(Rin + Rout)= ' + str(round(res1.x[0] * (res1.x[1] + Rout), 2)))
-    print('Ta = ' + str(round(Ta,2)))
-    print('Qgen = ' + str(round(Q_gen,2)))
-    print('Rout = ' + str(round(R_out,2)))
-    print('TS_initial_guess = ' + str(round(Ts_initial,2)))
+# =============================================================================
+#     fig, ax1 = plt.subplots(figsize=(7,4))
+#     ax1.plot(ts, res1.fun+ys, label = 'fitted least squares')
+#     ax1.plot(ts, ys, label = 'surface temp (filtered) \n' +
+#              str('Cp(Rin + Rout) = ' + str(round(res1.x[0], 2))))
+#     ax1.set_ylabel('Temperature [°C]')
+#     ax1.set_xlabel('Time (s)')
+#     ax1.legend()
+#     ax1.grid()
+#     
+#     print('Cp(Rin + Rout) = ' + str(round(res1.x[0], 2)))
+#     #print('Rin = ' + str(round(res1.x[1], 2)))
+#     #print('Cp(Rin + Rout)= ' + str(round(res1.x[0] * (res1.x[1] + Rout), 2)))
+#     print('Ta = ' + str(round(Ta,2)))
+#     print('Qgen = ' + str(round(Q_gen,2)))
+#     print('Rout = ' + str(round(R_out,2)))
+#     print('TS_initial_guess = ' + str(round(Ts_initial,2)))
+# =============================================================================
+    return A
 
-    
