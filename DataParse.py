@@ -9,7 +9,7 @@ Created on Wed Nov 17 09:55:19 2021
 class DataParse():
     """
     This class contains methods to deal with raw test data for the heat
-    capacity experiment.
+    capacity experiment. 
     """
 
     def __init__(self):
