@@ -95,15 +95,16 @@ class DataParse():
         ax1.set_xlabel('Running test time [s]')
         ax1.grid()
 
-    def add_filtered_data(self, test_data, rolling_window, poly_fit):
+    def add_filtered_temp(self, data, rolling_window, poly_fit):
         """
-        Adds two columns to test_data containing surface
-        and ambient temperatures filtered by a Savitzky–Golay filter
+        Adds two columns to data containing surface and ambient temperatures
+        filtered by a Savitzky–Golay filter. Is preferable to add filtered
+        temperatures
 
         Parameters
         ----------
-        test_data : pd.DataFrame
-            test_data from set_test_data method
+        data : pd.DataFrame
+            data from read_file or set_test_data method
         rolling_window : int
             must be odd, rolling window for the Savitzky–Golay filter
         poly_fit : int
@@ -111,24 +112,24 @@ class DataParse():
 
         Returns
         -------
-        test_data : pd.DataFrame
-            test_data with two columns added:
+        data : pd.DataFrame
+            data with two columns added:
             - surface_temp_filtered
             - ambient_temp_filtered
 
         """
         from scipy.signal import savgol_filter
-        self.test_data = test_data
+        self.data = data
         #  avoid SettingWithCopyWarning by making it indepent:
-        test_data = test_data.copy()
-        surface_temp_1 = test_data['Aux_Temperature_1(C)']  # Thermocouple 01
-        surface_temp_2 = test_data['Aux_Temperature_2(C)']  # Thermocouple 02
-        ambient_temp = test_data['Aux_Temperature_3(C)']    # Thermocouple 03
-        test_data['surface_temp_filtered'] = savgol_filter(
+        data = data.copy()
+        surface_temp_1 = data['Aux_Temperature_1(C)']  # Thermocouple 01
+        surface_temp_2 = data['Aux_Temperature_2(C)']  # Thermocouple 02
+        ambient_temp = data['Aux_Temperature_3(C)']    # Thermocouple 03
+        data['surface_temp_filtered'] = savgol_filter(
             (surface_temp_1 + surface_temp_2) / 2, rolling_window, poly_fit)
-        test_data['ambient_temp_filtered'] = savgol_filter(
+        data['ambient_temp_filtered'] = savgol_filter(
             ambient_temp, rolling_window, poly_fit)
-        return test_data
+        return data
 
     def calculate_AVG_Q_GEN(self, data, OCV):
         """
@@ -151,5 +152,5 @@ class DataParse():
         self.data = data
         self.OCV = OCV
         AVG_Q_GEN = abs((data['Voltage(V)'] - OCV) * data['Current(A)']).mean()
-        print('average Q_GEN =', round(AVG_Q_GEN, 3))
+        print('average Q_GEN =', round(AVG_Q_GEN, 3), ' [W]')
         return AVG_Q_GEN
