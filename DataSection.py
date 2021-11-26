@@ -109,7 +109,7 @@ class DataSection():
         AVG_SURFACE_TEMP = ((surface_temp_1 + surface_temp_2)/2).mean()
         AVG_AMBIENT_TEMP = ambient_temp.mean()
         R_OUT = (AVG_SURFACE_TEMP - AVG_AMBIENT_TEMP) / AVG_Q_GEN
-        print('R_OUT = ' + str(round(R_OUT, 3)))
+        print('R_OUT = ' + str(round(R_OUT, 3)) + ' [K/W]')
         return R_OUT
 
     def calculate_AVG_SURFACE_TEMP(self, final_section_data):
@@ -209,7 +209,8 @@ class DataSection():
         ax1.set_xlabel('Test_Time(s)')
         ax1.grid()
 
-    def optimize_equation(self, ys, initial_section_data, AVG_Q_GEN, R_OUT):
+    def optimize_equation(self, ys, initial_section_data, AVG_Q_GEN, R_OUT,
+                          plot=False):
         """
         Performs a least square regression optimizing Cp(ROUT + RIN) of the
         Equation 4 (Bryden, 2018).
@@ -248,7 +249,6 @@ class DataSection():
         self.AVG_Q_GEN = AVG_Q_GEN
         self.R_OUT = R_OUT
 
-        ys = initial_section_data['Aux_Temperature_1(C)']
         time_data = initial_section_data['Test_Time(s)']
         # Thermocouple 03:
         ambient_temp = initial_section_data['Aux_Temperature_3(C)']
@@ -270,6 +270,8 @@ class DataSection():
                 value of the surface temp data used for the optimization
             INITIAL_GUESS : float
                 initial guess for Cp(ROUT + RIN) parameter
+            plot : bool (default False)
+                if plot=True it plots fitted curve vs raw data
 
             Returns
             -------
@@ -296,24 +298,26 @@ class DataSection():
         # SciPy module:
         result = least_squares(fun, INITIAL_GUESS)
         optimized_parameter = result.x[0]  # Cp(ROUT + RIN)
-
-        fig, ax1 = plt.subplots(figsize=(7, 4))
-        ax1.plot(ts, result.fun + ys, label='fitted least squares')
-        ax1.plot(ts, ys, label='surface temp (filtered) \n' +
-                 str('Cp(Rin + Rout) = ' + str(round(result.x[0], 2))))
-        ax1.set_ylabel('Temperature [°C]')
-        ax1.set_xlabel('Time (s)')
-        ax1.legend()
-        ax1.grid()
-        print('\n-----------------------------------------------------------')
-        print('Least Squares optimization inputs:')
-        print('Ambient Temperature = ' + str(round(Ta, 3)))
-        print('AVG_Q_GEN = ' + str(round(AVG_Q_GEN, 3)))
-        print('R_OUT = ' + str(round(R_OUT, 3)))
-        print('Surface temperature initial guess = ' + str(round(
-            SURFACE_TEMP_INITIAL_GUESS, 2)))
-        print('\n' + '-----> Least Squares optimization output:')
-        print('Cp(Rin + Rout) = ' + str(round(optimized_parameter, 2)))
+        if plot:
+            fig, ax1 = plt.subplots(figsize=(7, 4))
+            ax1.plot(ts, ys, label='surface temp (filtered) \n' +
+                     str('Cp(Rin + Rout) = ' + str(round(result.x[0], 2))))
+            ax1.plot(ts, result.fun + ys, label='fitted least squares')
+            ax1.set_ylabel('Temperature [°C]')
+            ax1.set_xlabel('Time (s)')
+            ax1.legend()
+            ax1.grid()
+            print('\n-----------------------------------------------------------')
+            print('Least Squares optimization inputs:')
+            print('Ambient Temperature = ' + str(round(Ta, 3)))
+            print('AVG_Q_GEN = ' + str(round(AVG_Q_GEN, 3)))
+            print('R_OUT = ' + str(round(R_OUT, 3)))
+            print('Surface temperature initial guess = ' + str(round(
+                SURFACE_TEMP_INITIAL_GUESS, 2)))
+            print('\n' + '-----> Least Squares optimization output:')
+            print('Cp(Rin + Rout) = ' + str(round(optimized_parameter, 2)))
+        else:
+            pass
         return optimized_parameter
 
     def calculate_surface_temp(self, DENOMINATOR, ys, initial_section_data,
