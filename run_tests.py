@@ -14,7 +14,7 @@ from scipy.optimize import least_squares
 import numpy as np
 
 raw_data = pd.DataFrame(DataParse().read_file(0))
-raw_data = DataParse().add_filtered_temp(raw_data, 131, 1)
+raw_data = DataParse().add_filtered_temp(raw_data, 151, 1)
 #INITIAL_CUTOFF = 27840
 # File 0:
 #INITIAL_CUTOFF = 24150
@@ -39,7 +39,7 @@ ys = initial_section_data['surface_temp_filtered']
 #ys = initial_section_data['Aux_Temperature_1(C)']
 #time_data = initial_section_data['Test_Time(s)']
 opt_result = DataSection().optimize_equation(ys, initial_section_data,
-                           AVG_Q_GEN, R_OUT)
+                           AVG_Q_GEN, R_OUT, plot=True)
 
 
 DENOMINATOR = 360  # Cp(RIN + ROUT)
