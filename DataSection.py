@@ -176,7 +176,6 @@ class DataSection():
             AVG_SURFACE_TEMP - AVG_AMBIENT_TEMP)
         initial_section_data = initial_section_data[(
             initial_section_data['surface_temp_filtered'] < CUTOFF)]
-        print('cutoff temperature = ' + str(round(CUTOFF, 3)))
         return initial_section_data
 
     def plot_initial_section(self, initial_section_data):
@@ -191,6 +190,10 @@ class DataSection():
         """
         import matplotlib.pyplot as plt
         self.initial_section_data = initial_section_data
+        cutoff_temp = initial_section_data['surface_temp_filtered'].iloc[-1]
+        annotate_position_x = (1
+                               * initial_section_data['Test_Time(s)'].iloc[1])
+        annotate_position_y = 1.02 * cutoff_temp
         fig, ax1 = plt.subplots(figsize=(7, 4))
         ax1.plot(initial_section_data['Test_Time(s)'],
                  initial_section_data['Aux_Temperature_3(C)'],
@@ -207,6 +210,10 @@ class DataSection():
         ax1.legend(loc=0)
         ax1.set_ylabel('Temperature [°C]')
         ax1.set_xlabel('Test_Time(s)')
+        ax1.annotate('cutoff temperature = '
+                     + str(round(cutoff_temp, 3))
+                     + ' °C',
+                     (annotate_position_x, annotate_position_y))
         ax1.grid()
 
     def optimize_equation(self, ys, initial_section_data, AVG_Q_GEN, R_OUT,
