@@ -293,7 +293,8 @@ class DataSection():
             return target_equation(ts, SURFACE_TEMP_INITIAL_GUESS,
                                    INITIAL_GUESS) - ys
         INITIAL_GUESS = 106
-        SURFACE_TEMP_INITIAL_GUESS = ys.iloc[0]
+        #SURFACE_TEMP_INITIAL_GUESS = ys.iloc[0]
+        SURFACE_TEMP_INITIAL_GUESS = AVG_AMBIENT_TEMP
         # Here is where the optimization actually happens using least squares
         # SciPy module:
         result = least_squares(fun, INITIAL_GUESS)
@@ -320,7 +321,7 @@ class DataSection():
             pass
         return optimized_parameter
 
-    def calculate_surface_temp(self, DENOMINATOR, ys, initial_section_data,
+    def calculate_surface_temp(self, DENOMINATOR, initial_section_data,
                                AVG_Q_GEN, R_OUT):
         """
         Gets DENOMINATOR = Cp(ROUT + RIN) as input and evaluates Equation 4
@@ -338,10 +339,6 @@ class DataSection():
         ----------
         DENOMINATOR : float
             Cp(ROUT + RIN) for which the equation will be evaluated
-        ys : pd.DataFrame
-            surface temperature input from initial_section_data. Could be:
-            - any of the thermocouples. i.e. 'Aux_Temperature_1(C)'
-            - filtered surface temperature. i.e. 'surface_temp_filtered'
         initial_section_data : pd.DataFrame
             from set_initial_section_data method
         AVG_Q_GEN : float
@@ -356,7 +353,6 @@ class DataSection():
 
         """
         self.DENOMINATOR = DENOMINATOR
-        self.ys = ys
         self.initial_section_data = initial_section_data
         self.AVG_Q_GEN = AVG_Q_GEN
         self.R_OUT = R_OUT
@@ -366,8 +362,7 @@ class DataSection():
         ambient_temp = initial_section_data['Aux_Temperature_3(C)']
         # Calculates the average surface temperature for initial section
         AVG_AMBIENT_TEMP = ambient_temp.mean()
-
-        SURFACE_TEMP_INITIAL_GUESS = ys.iloc[0]
+        SURFACE_TEMP_INITIAL_GUESS = AVG_AMBIENT_TEMP
         Ts = []
         Ts.append(SURFACE_TEMP_INITIAL_GUESS)
 
