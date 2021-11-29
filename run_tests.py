@@ -45,4 +45,4 @@ opt_result = DataSection().optimize_equation(ys, initial_section_data,
 DENOMINATOR = 360  # Cp(RIN + ROUT)
 
 calculated_surface_temp = DataSection().calculate_surface_temp(
-    DENOMINATOR, ys, initial_section_data, AVG_Q_GEN, R_OUT)
+    DENOMINATOR, initial_section_data, AVG_Q_GEN, R_OUT)
