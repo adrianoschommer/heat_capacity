@@ -95,11 +95,11 @@ class DataParse():
         ax1.set_xlabel('Running test time [s]')
         ax1.grid()
 
-    def add_filtered_temp(self, data, rolling_window, poly_fit):
+    def add_temperature_channels(self, data, rolling_window, poly_fit):
         """
-        Adds two columns to data containing surface and ambient temperatures
-        filtered by a Savitzky–Golay filter. Is preferable to add filtered
-        temperatures
+        Adds three columns to data containing surface and ambient temperatures
+        filtered by a Savitzky–Golay filter. Also adds the average surface
+        temperatures from thermocouples signal
 
         Parameters
         ----------
@@ -116,6 +116,7 @@ class DataParse():
             data with two columns added:
             - surface_temp_filtered
             - ambient_temp_filtered
+            - surface_temp_average
 
         """
         from scipy.signal import savgol_filter
@@ -129,6 +130,7 @@ class DataParse():
             (surface_temp_1 + surface_temp_2) / 2, rolling_window, poly_fit)
         data['ambient_temp_filtered'] = savgol_filter(
             ambient_temp, rolling_window, poly_fit)
+        data['surface_temp_average'] = ((surface_temp_1 + surface_temp_2)/2)
         return data
 
     def calculate_AVG_Q_GEN(self, data, OCV):
@@ -152,5 +154,5 @@ class DataParse():
         self.data = data
         self.OCV = OCV
         AVG_Q_GEN = abs((data['Voltage(V)'] - OCV) * data['Current(A)']).mean()
-        print('average Q_GEN =', round(AVG_Q_GEN, 3), ' [W]')
+        print('average Q_GEN = ' + str(round(AVG_Q_GEN, 3)) + ' [W]')
         return AVG_Q_GEN
