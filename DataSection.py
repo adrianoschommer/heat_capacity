@@ -372,3 +372,30 @@ class DataSection():
                     / (DENOMINATOR)) + Ts[-1]
             Ts.append(Ts_n)
         return Ts
+
+    def calculate_heat_capacity(self, R_OUT, optimized_parameters):
+        """
+        Calculates heat capacity [J/K]
+
+        Parameters
+        ----------
+        R_OUT : list
+            External thermal resistance for each experiment [K/W]
+        optimized_parameters : list
+            Optimized Cp(Rin + Rout) parameters from optimize_equation
+            method
+
+        Returns
+        -------
+        res : float
+            Heat capacity [J/K]
+
+        """
+        self.R_OUT = R_OUT
+        self.optimized_parameters = optimized_parameters
+        import sympy as sp
+        Cp, Rin = sp.symbols('Cp, Rin')
+        Eq1 = sp.Eq(Cp * (Rin + R_OUT[0]), optimized_parameters[0])
+        Eq2 = sp.Eq(Cp * (Rin + R_OUT[1]), optimized_parameters[1])
+        res = sp.solve([Eq1, Eq2], Cp, Rin)
+        return res
