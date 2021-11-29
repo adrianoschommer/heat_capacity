@@ -100,13 +100,9 @@ class DataSection():
         """
         self.final_section_data = final_section_data
         self.AVG_Q_GEN = AVG_Q_GEN
-        # Thermocouple 01:
-        surface_temp_1 = final_section_data['Aux_Temperature_1(C)']
-        # Thermocouple 02:
-        surface_temp_2 = final_section_data['Aux_Temperature_2(C)']
         # Thermocouple 03:
         ambient_temp = final_section_data['Aux_Temperature_3(C)']
-        AVG_SURFACE_TEMP = ((surface_temp_1 + surface_temp_2)/2).mean()
+        AVG_SURFACE_TEMP = final_section_data['surface_temp_average'].mean()
         AVG_AMBIENT_TEMP = ambient_temp.mean()
         R_OUT = (AVG_SURFACE_TEMP - AVG_AMBIENT_TEMP) / AVG_Q_GEN
         print('R_OUT = ' + str(round(R_OUT, 3)) + ' [K/W]')
@@ -129,12 +125,9 @@ class DataSection():
 
         """
         self.final_section_data = final_section_data
-        # Thermocouple 01:
-        surface_temp_1 = final_section_data['Aux_Temperature_1(C)']
-        # Thermocouple 02:
-        surface_temp_2 = final_section_data['Aux_Temperature_2(C)']
-        AVG_SURFACE_TEMP = ((surface_temp_1 + surface_temp_2)/2).mean()
-        print('AVG_SURFACE_TEMP = ' + str(round(AVG_SURFACE_TEMP, 3)))
+        AVG_SURFACE_TEMP = final_section_data['surface_temp_average'].mean()
+        print('AVG_SURFACE_TEMP = ' + str(round(AVG_SURFACE_TEMP, 3))
+              + ' [°C]')
         return AVG_SURFACE_TEMP
 
     def set_initial_section(self, test_data, CUTOFF_FACTOR, AVG_SURFACE_TEMP):
