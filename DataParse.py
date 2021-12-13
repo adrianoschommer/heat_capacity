@@ -9,7 +9,7 @@ Created on Wed Nov 17 09:55:19 2021
 class DataParse():
     """
     This class contains methods to deal with raw test data for the heat
-    capacity experiment. 
+    capacity experiment.
     """
 
     def __init__(self):
@@ -45,7 +45,7 @@ class DataParse():
         print(str(self.files[int(select_file)]) + ' successfully loaded')
         return data
 
-    def set_test_data(self, raw_data, INITIAL_CUTOFF):
+    def set_test_data(self, raw_data, HOLD_FACTOR):
         """
         Cut raw data from the beggining of the test to the end of raw data
 
@@ -53,8 +53,8 @@ class DataParse():
         ----------
         raw_data : pd.DataFrame
             data from read_file method
-        INITIAL_CUTOFF : int
-            Test_time(s) from which the data is cut
+        HOLD_FACTOR : int
+            How many data points of Current = 0 is hold until it is True
 
         Returns
         -------
@@ -62,9 +62,21 @@ class DataParse():
             cycle test window from the cutoff time to the end of raw data
 
         """
+        import numpy as np
         self.raw_data = raw_data
-        self.INITIAL_CUTOFF = INITIAL_CUTOFF
-        test_data = raw_data[(raw_data['Test_Time(s)'] > INITIAL_CUTOFF)]
+        self.HOLD_FACTOR = HOLD_FACTOR
+        trigger_counter = 0
+        for i in range(0, len(raw_data)):
+            trigger_condition = np.mean(
+                raw_data['Current(A)'].iloc[-i]
+                + raw_data['Current(A)'].iloc[-(i + 1)])
+            if round(trigger_condition, 0) == 0:
+                trigger_counter += 1
+                if trigger_counter >= HOLD_FACTOR:
+                    CUTOFF_INDEX = (
+                        raw_data['Test_Time(s)'].iloc[HOLD_FACTOR - i])
+                    break
+        test_data = raw_data[(raw_data['Test_Time(s)'] > CUTOFF_INDEX)]
         test_data.reset_index(drop=True, inplace=True)  # Reset index
         return test_data
 
