@@ -125,7 +125,7 @@ class DataParse():
         Returns
         -------
         data : pd.DataFrame
-            data with two columns added:
+            data with columns added:
             - surface_temp_filtered
             - ambient_temp_filtered
             - surface_temp_average
@@ -144,6 +144,48 @@ class DataParse():
             ambient_temp, rolling_window, poly_fit)
         data['surface_temp_average'] = ((surface_temp_1 + surface_temp_2)/2)
         return data
+
+    def add_SOC_channel(self, raw_data):
+        """
+        This method takes raw data and adds SOC channel
+
+        Parameters
+        ----------
+        raw_data : pd.DataFrame
+            data from read_file method.
+
+        Returns
+        -------
+        raw_data : pd.DataFrame
+            data with columns added:
+            - SOC
+
+        """
+        self.raw_data = raw_data
+        #  avoid SettingWithCopyWarning by making it indepent:
+        raw_data = raw_data.copy()
+        import numpy as np
+        HOLD_FACTOR = 20
+        trigger_counter = 0
+        for i in range(0, len(raw_data)):
+            trigger_condition = np.mean(
+                raw_data['Current(A)'].iloc[-i]
+                + raw_data['Current(A)'].iloc[-(i + 1)])
+            if round(trigger_condition, 0) == 0:
+                trigger_counter += 1
+                if trigger_counter >= HOLD_FACTOR:
+                    CUTOFF_INDEX = (raw_data['Test_Time(s)'].iloc[- i])
+                    break
+        pre_test_data = raw_data[(raw_data['Test_Time(s)'] > CUTOFF_INDEX)]
+        discharge_capacity_100_SOC = max(raw_data['Discharge_Capacity(Ah)'])
+        discharge_capacity_initial_SOC = max(
+            pre_test_data['Discharge_Capacity(Ah)'])
+        # finds what is the SOC at the begining of the test
+        initial_SOC = (discharge_capacity_initial_SOC
+                       / discharge_capacity_100_SOC)
+        raw_data['SOC'] = ((raw_data['Discharge_Capacity(Ah)']
+                            / discharge_capacity_100_SOC) + initial_SOC) * 100
+        return raw_data
 
     def calculate_AVG_Q_GEN(self, data, OCV):
         """
