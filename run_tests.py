@@ -17,6 +17,7 @@ import numpy as np
 
 raw_data = pd.DataFrame(DataParse().read_file(0))
 raw_data = DataParse().add_temperature_channels(raw_data, 151, 1)
+raw_data = DataParse().add_SOC_channel(raw_data)
 #INITIAL_CUTOFF = 27840
 # File 0:
 #INITIAL_CUTOFF = 24150
@@ -25,6 +26,7 @@ DataParse().plot_test_data(test_data)
 AVG_Q_GEN = DataParse().calculate_AVG_Q_GEN(test_data, 3.82)
 final_section_data = DataSection().set_final_section(test_data, 0.3)
 R_OUT_no_fan = DataSection().calculate_R_OUT(final_section_data, AVG_Q_GEN)
+#R_OUT_no_fan = 2.27
 DataSection().plot_final_section(final_section_data)
 AVG_SURFACE_TEMP = DataSection().calculate_AVG_SURFACE_TEMP(final_section_data)
 ## if you calculate AVG_Q_GEN only from the final data you get lower values
@@ -44,6 +46,7 @@ calculated_surface_temp = DataSection().calculate_surface_temp(
 
 raw_data = pd.DataFrame(DataParse().read_file(1))
 raw_data = DataParse().add_temperature_channels(raw_data, 151, 1)
+raw_data = DataParse().add_SOC_channel(raw_data)
 #INITIAL_CUTOFF = 27840
 # File 0:
 #INITIAL_CUTOFF = 24150
@@ -52,6 +55,7 @@ DataParse().plot_test_data(test_data)
 AVG_Q_GEN = DataParse().calculate_AVG_Q_GEN(test_data, 3.82)
 final_section_data = DataSection().set_final_section(test_data, 0.3)
 R_OUT_fan = DataSection().calculate_R_OUT(final_section_data, AVG_Q_GEN)
+#R_OUT_fan = 1.77
 DataSection().plot_final_section(final_section_data)
 AVG_SURFACE_TEMP = DataSection().calculate_AVG_SURFACE_TEMP(final_section_data)
 ## if you calculate AVG_Q_GEN only from the final data you get lower values
@@ -71,4 +75,5 @@ optimized_parameters = [opt_result_no_fan, opt_result_fan]
 
 heat_capacity = DataSection().calculate_heat_capacity(R_OUT, optimized_parameters)
 specific_heat_capacity = heat_capacity[0][0]/0.114
-print(specific_heat_capacity)
+#print(specific_heat_capacity)
+print(heat_capacity[0][0])
