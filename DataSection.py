@@ -316,7 +316,8 @@ class DataSection():
             print('Surface temperature initial guess = ' + str(round(
                 SURFACE_TEMP_INITIAL_GUESS, 2)))
             print('\n' + '-----> Least Squares optimization output:')
-            print('Cp(Rin + Rout) = ' + str(round(optimized_parameter, 2)))
+            print('Cp(Rin + Rout) = ' + str(round(optimized_parameter, 2)),
+                  '\n')
         else:
             pass
         return optimized_parameter
