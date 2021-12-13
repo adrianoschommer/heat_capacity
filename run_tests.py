@@ -20,7 +20,7 @@ raw_data = DataParse().add_temperature_channels(raw_data, 151, 1)
 #INITIAL_CUTOFF = 27840
 # File 0:
 #INITIAL_CUTOFF = 24150
-test_data = DataParse().set_test_data(raw_data, 24150)
+test_data = DataParse().set_test_data(raw_data, 20)
 DataParse().plot_test_data(test_data)
 AVG_Q_GEN = DataParse().calculate_AVG_Q_GEN(test_data, 3.82)
 final_section_data = DataSection().set_final_section(test_data, 0.3)
@@ -47,7 +47,7 @@ raw_data = DataParse().add_temperature_channels(raw_data, 151, 1)
 #INITIAL_CUTOFF = 27840
 # File 0:
 #INITIAL_CUTOFF = 24150
-test_data = DataParse().set_test_data(raw_data, 27840)
+test_data = DataParse().set_test_data(raw_data, 20)
 DataParse().plot_test_data(test_data)
 AVG_Q_GEN = DataParse().calculate_AVG_Q_GEN(test_data, 3.82)
 final_section_data = DataSection().set_final_section(test_data, 0.3)
