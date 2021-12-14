@@ -161,10 +161,10 @@ class DataParse():
             - SOC
 
         """
+        import numpy as np
         self.raw_data = raw_data
         #  avoid SettingWithCopyWarning by making it indepent:
         raw_data = raw_data.copy()
-        import numpy as np
         HOLD_FACTOR = 20
         trigger_counter = 0
         for i in range(0, len(raw_data)):
@@ -185,6 +185,35 @@ class DataParse():
                        / discharge_capacity_100_SOC)
         raw_data['SOC'] = ((raw_data['Discharge_Capacity(Ah)']
                             / discharge_capacity_100_SOC) + initial_SOC) * 100
+        return raw_data
+
+    def add_OCV_channel(self, raw_data, file):
+        """
+        This method takes raw data and adds OCV channel based on OCV(SOC) data
+
+        Parameters
+        ----------
+        raw_data : pd.DataFrame
+            data from read_file method.
+
+        Returns
+        -------
+        raw_data : pd.DataFrame
+            data with columns added:
+            - OCV
+
+        """
+        import pandas as pd
+        self.raw_data = raw_data
+        self.file = file
+        #  avoid SettingWithCopyWarning by making it indepent:
+        raw_data = raw_data.copy()
+        OCV_data = pd.read_csv(file)
+        df = pd.DataFrame(raw_data['SOC'])
+        df = pd.concat([df, OCV_data]).sort_values('SOC')
+        df = df.interpolate()
+        df = df[df['SOC'].isin(raw_data['SOC'])].sort_index()
+        raw_data['OCV'] = df['OCV']
         return raw_data
 
     def calculate_AVG_Q_GEN(self, data, OCV):
