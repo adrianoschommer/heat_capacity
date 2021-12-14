@@ -18,6 +18,8 @@ import numpy as np
 raw_data = pd.DataFrame(DataParse().read_file(0))
 raw_data = DataParse().add_temperature_channels(raw_data, 151, 1)
 raw_data = DataParse().add_SOC_channel(raw_data)
+file = 'OCV_SOC.csv'
+raw_data = DataParse().add_OCV_channel(raw_data, file)
 #INITIAL_CUTOFF = 27840
 # File 0:
 #INITIAL_CUTOFF = 24150
@@ -47,6 +49,8 @@ calculated_surface_temp = DataSection().calculate_surface_temp(
 raw_data = pd.DataFrame(DataParse().read_file(1))
 raw_data = DataParse().add_temperature_channels(raw_data, 151, 1)
 raw_data = DataParse().add_SOC_channel(raw_data)
+file = 'OCV_SOC.csv'
+raw_data = DataParse().add_OCV_channel(raw_data, file)
 #INITIAL_CUTOFF = 27840
 # File 0:
 #INITIAL_CUTOFF = 24150
