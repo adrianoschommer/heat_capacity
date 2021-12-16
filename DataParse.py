@@ -109,11 +109,10 @@ class DataParse():
         ax1.set_xlabel('Running test time [s]')
         ax1.grid()
 
-    def add_temperature_channels(self, data, rolling_window, poly_fit):
+    def filter_temperature_channels(self, data, rolling_window, poly_fit):
         """
-        Adds three columns to data containing surface and ambient temperatures
-        filtered by a Savitzky–Golay filter. Also adds the average surface
-        temperatures from thermocouples signal
+        Adds columns to data containing surface and ambient temperatures
+        filtered by a Savitzky–Golay filter.
 
         Parameters
         ----------
@@ -130,21 +129,17 @@ class DataParse():
             data with columns added:
             - surface_temp_filtered
             - ambient_temp_filtered
-            - surface_temp_average
 
         """
         from scipy.signal import savgol_filter
         self.data = data
         #  avoid SettingWithCopyWarning by making it indepent:
         data = data.copy()
-        surface_temp_1 = data['Aux_Temperature_1(C)']  # Thermocouple 01
-        surface_temp_2 = data['Aux_Temperature_2(C)']  # Thermocouple 02
         ambient_temp = data['Aux_Temperature_3(C)']    # Thermocouple 03
         data['surface_temp_filtered'] = savgol_filter(
-            (surface_temp_1 + surface_temp_2) / 2, rolling_window, poly_fit)
+            data['surface_temp_average'], rolling_window, poly_fit)
         data['ambient_temp_filtered'] = savgol_filter(
             ambient_temp, rolling_window, poly_fit)
-        data['surface_temp_average'] = ((surface_temp_1 + surface_temp_2)/2)
         return data
 
     def add_average_surface_temp(self, raw_data,
