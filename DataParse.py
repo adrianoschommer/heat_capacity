@@ -42,7 +42,9 @@ class DataParse():
             select_file = input('enter the number of the file '
                                 + 'you want to load: \n')
         data = pd.read_excel(self.files[int(select_file)], sheet_name=1)
+        print('\n')
         print(str(self.files[int(select_file)]) + ' successfully loaded')
+        print('\n')
         return data
 
     def set_test_data(self, raw_data, HOLD_FACTOR):
