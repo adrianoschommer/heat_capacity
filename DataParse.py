@@ -147,6 +147,50 @@ class DataParse():
         data['surface_temp_average'] = ((surface_temp_1 + surface_temp_2)/2)
         return data
 
+    def add_average_surface_temp(self, raw_data,
+                                 total_number_of_thermocouples, 
+                                 ambient_thermocouple_index):
+        """
+        Adds to raw_data the average surface temperature values of all 
+        thermocouples used in the test.
+
+        Parameters
+        ----------
+        raw_data : Tpd.DataFrame
+            data from read_file
+        total_number_of_thermocouples : int
+            How many thermocouples in total were used in the test including
+            the ambient temperature thermocouple, which is assumed to be only 
+            one.
+        ambient_thermocouple_index : int
+            the index of the ambient temp thermocouple. It is needed to skip
+            this thermocouple while averaging data.
+
+        Returns
+        -------
+        raw_data : Tpd.DataFrame
+            raw_data with columns added:
+            - surface_temp_average
+
+        """
+        import pandas as pd
+        import numpy as np
+        self.raw_data = raw_data
+        self.total_number_of_thermocouples = total_number_of_thermocouples
+        self.ambient_thermocouple_index = ambient_thermocouple_index
+        #  avoid SettingWithCopyWarning by making it indepent:
+        raw_data = raw_data.copy()
+        surface_temp = pd.Series(np.zeros(len(raw_data)))
+        for i in range(1, total_number_of_thermocouples + 1):
+            if i == ambient_thermocouple_index:
+                pass
+            else:
+                surface_temp = surface_temp.add(raw_data['Aux_Temperature_' 
+                                                         + str(i) + '(C)'])
+        surface_temp = surface_temp / (total_number_of_thermocouples - 1)
+        raw_data['surface_temp_average'] = surface_temp
+        return raw_data
+
     def add_SOC_channel(self, raw_data):
         """
         This method takes raw data and adds SOC channel
