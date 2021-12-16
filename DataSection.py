@@ -308,7 +308,7 @@ class DataSection():
             ax1.set_xlabel('Time (s)')
             ax1.legend()
             ax1.grid()
-            print('\n-----------------------------------------------------------')
+            print('\n')
             print('Least Squares optimization inputs:')
             print('Ambient Temperature = ' + str(round(Ta, 3)))
             print('AVG_Q_GEN = ' + str(round(AVG_Q_GEN, 3)))
@@ -317,7 +317,7 @@ class DataSection():
                 SURFACE_TEMP_INITIAL_GUESS, 2)))
             print('\n' + '-----> Least Squares optimization output:')
             print('Cp(Rin + Rout) = ' + str(round(optimized_parameter, 2)),
-                  '\n')
+                  '\n--------------------------------------------------------')
         else:
             pass
         return optimized_parameter
